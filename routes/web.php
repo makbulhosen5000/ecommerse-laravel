@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\HomesController;
 use App\Http\Controllers\admin\AdminController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,6 +35,17 @@ Route::middleware([
     })->name('dashboard');
 });
 Route::get('/redirect',[HomesController::class, 'redirect']);
+
+//.... category routes  ....//
 Route::get('/view_category',[AdminController::class, 'viewCategory']);
 Route::post('/add_category', [AdminController::class, 'addCategory']);
+Route::get('/delete_category/{id}', [AdminController::class, 'deleteCategory']);
+
+//.... product routes ....//
+Route::get('/view_product', [AdminController::class, 'viewProduct']);
+Route::post('/add_product', [AdminController::class, 'addProduct']);
+Route::get('/show_product', [AdminController::class, 'showProduct']);
+Route::get('/update_product/{id}', [AdminController::class, 'updateProduct']);
+Route::get('/delete_product/{id}', [AdminController::class, 'deleteProduct']);
+
 
