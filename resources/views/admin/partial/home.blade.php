@@ -3,23 +3,23 @@
 <html lang="en">
 
 <head>
-    @include('admin.css')
+    @include('admin.partial.css')
 </head>
 
 <body>
     <div class="container-scroller">
         <!-- partial:partials/_sidebar.html -->
 
-        @include('admin.sidebar')
+        @include('admin.partial.sidebar')
 
         <!-- partial -->
-        @include('admin.header')
+        @include('admin.partial.header')
         <!-- partial -->
-        @include('admin.body')
+        @include('admin.partial.body')
         <!-- page-body-wrapper ends -->
     </div>
     <!-- container-scroller -->
-    @include('admin.script')
+    @include('admin.partial.script')
 </body>
 
 </html>

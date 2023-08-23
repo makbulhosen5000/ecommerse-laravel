@@ -16,9 +16,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 Route::get('/',[HomesController::class,'index']);
 Route::prefix('todos')->controller(HomesController::class)->name('todos.')->group(function () {   
      Route::get('','index')->name('index');
@@ -46,6 +46,7 @@ Route::get('/view_product', [AdminController::class, 'viewProduct']);
 Route::post('/add_product', [AdminController::class, 'addProduct']);
 Route::get('/show_product', [AdminController::class, 'showProduct']);
 Route::get('/update_product/{id}', [AdminController::class, 'updateProduct']);
+Route::post('/update_product_store/{id}', [AdminController::class, 'updateProductStore']);
 Route::get('/delete_product/{id}', [AdminController::class, 'deleteProduct']);
 
 

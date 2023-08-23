@@ -2,17 +2,17 @@
 <html lang="en">
 
 <head>
-    @include('admin.pertial.css')
+    @include('admin.partial.css')
 </head>
 
 <body>
     <div class="container-scroller">
         <!-- partial:partials/_sidebar.html -->
 
-        @include('admin.pertial.sidebar')
+        @include('admin.partial.sidebar')
 
         <!-- partial -->
-        @include('admin.pertial.header')
+        @include('admin.partial.header')
         <!-- partial -->
         <div class="main-panel">
             <div class="content-wrapper">
@@ -80,7 +80,7 @@
         <!-- page-body-wrapper ends -->
     </div>
     <!-- container-scroller -->
-    @include('admin.pertial.script')
+    @include('admin.partial.script')
 </body>
 
 </html>
