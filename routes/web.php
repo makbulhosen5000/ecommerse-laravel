@@ -35,18 +35,25 @@ Route::middleware([
     })->name('dashboard');
 });
 Route::get('/redirect',[HomesController::class, 'redirect']);
+//.... product_details routes frontend ....//
+Route::get('/product_details/{id}', [HomesController::class, 'productDetails']);
+Route::post('/add_cart/{id}', [HomesController::class, 'AddCart']);
+Route::get('/show_cart', [HomesController::class, 'showCart']);
+Route::get('/remove_cart/{id}', [HomesController::class, 'removeCart']);
+Route::get('/cash_on_delivery',[HomesController::class, 'cashOnDelivery']);
+Route::get('/stripe/{totalPrice}',[HomesController::class,'stripe']);
+Route::post('/stripe/{totalPrice}',[HomesController::class, 'stripePost'])->name('stripe.post');
 
 //.... category routes  ....//
 Route::get('/view_category',[AdminController::class, 'viewCategory']);
 Route::post('/add_category', [AdminController::class, 'addCategory']);
 Route::get('/delete_category/{id}', [AdminController::class, 'deleteCategory']);
 
-//.... product routes ....//
+//.... product routes for backend ....//
 Route::get('/view_product', [AdminController::class, 'viewProduct']);
 Route::post('/add_product', [AdminController::class, 'addProduct']);
 Route::get('/show_product', [AdminController::class, 'showProduct']);
 Route::get('/update_product/{id}', [AdminController::class, 'updateProduct']);
 Route::post('/update_product_store/{id}', [AdminController::class, 'updateProductStore']);
 Route::get('/delete_product/{id}', [AdminController::class, 'deleteProduct']);
-
 
