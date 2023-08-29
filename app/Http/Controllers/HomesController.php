@@ -107,6 +107,7 @@ class HomesController extends Controller
      * @param  \App\Models\cr  $cr
      * @return \Illuminate\Http\Response
      */
+    // cash order function
     public function cashOnDelivery()
     {
         $user = Auth::user();
@@ -155,6 +156,28 @@ class HomesController extends Controller
             "source" => $request->stripeToken,
             "description" => "Test payment from user"
         ]);
+        $user = Auth::user();
+        $userId = $user->id;
+        $data = Cart::where('user_id', '=', $userId)->get();
+        foreach ($data as $data) {
+            $order = new order;
+            $order->name = $data->name;
+            $order->email = $data->email;
+            $order->phone = $data->phone;
+            $order->address = $data->address;
+            $order->user_id = $data->user_id;
+            $order->product_title = $data->product_title;
+            $order->price = $data->price;
+            $order->quantity = $data->quantity;
+            $order->image = $data->image;
+            $order->product_id = $data->product_id;
+            $order->payment_status = 'PAID';
+            $order->delivery_status = 'processing';
+            $order->save();
+            $cart_id =  $data->id;
+            $cart = Cart::find($cart_id);
+            $cart->delete();
+        }
 
         Session::flash('success', 'Payment successful!');
         return back();

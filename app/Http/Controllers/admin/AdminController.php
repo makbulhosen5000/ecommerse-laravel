@@ -4,9 +4,11 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Session;
+use PDF;
 
 class AdminController extends Controller
 {
@@ -82,5 +84,25 @@ class AdminController extends Controller
         }
         $deleteData->delete();
         return redirect()->back()->with('success', 'Product Deleted Successfully');
+    }
+
+    // order related function
+    public function order(){
+        $orders = Order::all();
+        return view('admin.order.order',compact('orders'));
+    }
+    public function delivered($id){
+        $order = Order::find($id);
+        $order->delivery_status="delivered";
+        $order->payment_status="PAID";
+        $order->save();
+        return redirect()->back();
+    }
+
+    public function printPdf($id){
+         $order = Order::find($id);
+        $pdf = PDF::loadView('admin.pdf.pdf',compact('order'));
+        return $pdf->download('order_details.pdf');
+
     }
 }
