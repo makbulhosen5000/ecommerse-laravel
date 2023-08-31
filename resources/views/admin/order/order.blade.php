@@ -38,6 +38,7 @@
                                 <th scope="col">Image</th>
                                 <th scope="col">Delivered</th>
                                 <th scope="col">PDF</th>
+                                <th scope="col">Send Email</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -60,12 +61,13 @@
                                     <td>
                                         @if($item->delivery_status == 'processing')
                                         <a id="" href="{{ url('delivered',$item->id) }}"
-                                            class="btn btn-primary" onclick="return confirm('Are You Sure To Dilever?')">Deliver</a>
+                                            class="btn btn-warning" onclick="return confirm('Are You Sure To Dilever?')">Deliver</a>
                                         @else
-                                        <a id="" href="" class="btn btn-warning">Delivered</a>
+                                        <a id="" href="" class="btn btn-primary">Delivered</a>
                                         @endif
                                     </td>
                                     <td>  <a href="{{ url('print_pdf',$item->id) }}" class="btn btn-success">Print PDF</a></td>
+                                    <td>  <a href="{{ url('send_email',$item->id) }}" class="btn btn-primary">Send Email</a></td>
                                 </tr>
                             @endforeach
                         </tbody>

@@ -3,6 +3,7 @@
 use App\Http\Controllers\HomesController;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\ProductController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,7 +35,7 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
-Route::get('/redirect', [HomesController::class, 'redirect']);
+Route::get('/redirect', [HomesController::class, 'redirect'])->middleware('auth', 'verified');
 //.... product_details routes frontend ....//
 Route::get('/product_details/{id}', [HomesController::class, 'productDetails']);
 Route::post('/add_cart/{id}', [HomesController::class, 'AddCart']);
@@ -59,3 +60,5 @@ Route::get('/delete_product/{id}', [AdminController::class, 'deleteProduct']);
 Route::get('/order', [AdminController::class, 'order']);
 Route::get('/delivered/{id}', [AdminController::class, 'delivered']);
 Route::get('/print_pdf/{id}', [AdminController::class, 'printPdf']);
+Route::get('/send_email/{id}', [AdminController::class, 'sendEmail']);
+Route::post('/send_user_email/{id}', [AdminController::class, 'sendUserEmail']);
