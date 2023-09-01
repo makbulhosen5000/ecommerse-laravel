@@ -62,3 +62,7 @@ Route::get('/delivered/{id}', [AdminController::class, 'delivered']);
 Route::get('/print_pdf/{id}', [AdminController::class, 'printPdf']);
 Route::get('/send_email/{id}', [AdminController::class, 'sendEmail']);
 Route::post('/send_user_email/{id}', [AdminController::class, 'sendUserEmail']);
+//search related routes
+Route::get('/search', [AdminController::class, 'searchData']);
+
+

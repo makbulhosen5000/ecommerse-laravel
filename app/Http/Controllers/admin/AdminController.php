@@ -102,7 +102,7 @@ class AdminController extends Controller
     }
 
     public function printPdf($id){
-         $order = Order::find($id);
+        $order = Order::find($id);
         $pdf = PDF::loadView('admin.pdf.pdf',compact('order'));
         return $pdf->download('order_details.pdf');
 
@@ -126,5 +126,15 @@ class AdminController extends Controller
         Notification::send($order, new SendEmailNotification($details));
         return redirect()->back()->with('success', 'Notification Send To User Successfully');
     } 
+    
+    //search function
+    public function searchData(Request $request){
+        $searchText = $request->search;
+        //search by name
+        //$orders = Order::where('name','LIKE',"%$searchText%")->get();
+        //search by name,phone and product_title
+        $orders = Order::where('name','LIKE',"%$searchText%")->orWhere('phone','LIKE', "%$searchText%")->orWhere('product_title','LIKE',"%$searchText%")->get();
+        return view('admin.order.order',compact('orders'));
+    }
 }
 

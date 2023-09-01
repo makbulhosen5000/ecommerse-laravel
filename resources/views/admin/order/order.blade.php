@@ -16,9 +16,20 @@
         <!-- partial -->
         <div class="main-panel">
             <div class="content-wrapper">
-                <div>
                     <h1 class="text-center text-2xl">All Order List</h1>
-                </div>
+                    <form action="{{ url('search') }}" method="GET">
+                        @csrf
+                        <div class="container mt-4">
+                            <div class="row">
+                                <div class="col-md-6 offset-md-3">
+                                <div class="input-group">
+                                    <input type="text" name="search" class="form-control" placeholder="Search...">
+                                    <button class="btn btn-primary" type="submit">Search</button>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
 
                 <div class="table-responsive mt-5 text-center">
                     <table class="table">
@@ -42,7 +53,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($orders as $key => $item)
+                            @forelse ($orders as $key => $item)
                                 <tr>
                                     <th scope="row">{{ $key + 1 }}</th>
                                     <td>{{ $item->name }}</td>
@@ -69,7 +80,11 @@
                                     <td>  <a href="{{ url('print_pdf',$item->id) }}" class="btn btn-success">Print PDF</a></td>
                                     <td>  <a href="{{ url('send_email',$item->id) }}" class="btn btn-primary">Send Email</a></td>
                                 </tr>
-                            @endforeach
+                                @empty
+                                <div class="text-center btn btn-warning">
+                                    <h1>No Data Found</h1>
+                                </div>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>

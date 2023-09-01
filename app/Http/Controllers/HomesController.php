@@ -6,6 +6,7 @@ use App\Models\Cart;
 use App\Models\cr;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Session;
@@ -27,7 +28,18 @@ class HomesController extends Controller
     {
        $usertype = Auth::user()->usertype;
        if($usertype == '1'){
-        return view('admin.partial.home');
+        $data['totalProduct']= Product::all()->count();
+        $data['totalOrder']= Order::all()->count();
+        $data['totalUser'] = User::all()->count();
+        $order = Order::all();
+        $totalRevenue=0;
+        foreach($order as $order){
+                $totalRevenue = $totalRevenue + $order->price;
+        }
+        $data['totalDelivered'] = Order::where('delivery_status','=','delivered')->get()->count();
+        $data['totalProcessing'] = Order::where('delivery_status','=', 'processing')->get()->count();
+      
+        return view('admin.partial.home',$data,compact('totalRevenue'));
        }
        else{
         $data['products']=Product::orderBy('id','desc')->paginate(3);
