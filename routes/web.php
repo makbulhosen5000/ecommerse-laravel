@@ -44,7 +44,12 @@ Route::get('/remove_cart/{id}', [HomesController::class, 'removeCart']);
 Route::get('/cash_on_delivery', [HomesController::class, 'cashOnDelivery']);
 Route::get('/stripe/{totalPrice}', [HomesController::class, 'stripe']);
 Route::post('/stripe/{totalPrice}', [HomesController::class, 'stripePost'])->name('stripe.post');
-
+//comments route
+Route::post('/add_comment', [HomesController::class, 'addComment']);
+//comments reply route
+Route::post('/add_reply', [HomesController::class, 'addReply']);
+//search product
+Route::get('/search_product',[HomesController::class,'searchProduct']);
 //.... category routes  ....//
 Route::get('/view_category', [AdminController::class, 'viewCategory']);
 Route::post('/add_category', [AdminController::class, 'addCategory']);
@@ -64,5 +69,8 @@ Route::get('/send_email/{id}', [AdminController::class, 'sendEmail']);
 Route::post('/send_user_email/{id}', [AdminController::class, 'sendUserEmail']);
 //search related routes
 Route::get('/search', [AdminController::class, 'searchData']);
+//user order related route
+Route::get('/show_order', [AdminController::class, 'showOrder']);
+Route::get('/cancel_order/{id}', [AdminController::class, 'cancelOrder']);
 
 

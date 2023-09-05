@@ -3,6 +3,12 @@
         <div class="heading_container heading_center">
             <h2>
                 Our <span>products</span>
+                <div>
+                    <form action="{{ url('search_product') }}" method="GET">
+                        <input type="search" placeholder="search product" class="p-3" name="search" style="width: 500px">
+                        <input type="submit" value="Search" value="Search">
+                    </form>
+                </div>
             </h2>
         </div>
         <div class="row">

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\Comments;
 use App\Models\cr;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Reply;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +23,9 @@ class HomesController extends Controller
      */
 
     public function index(){
-        $data['products']=Product::orderBy('id','desc')->paginate(3);
+        $data['products']=Product::orderBy('id','desc')->paginate(6);
+        $data['comments'] = Comments::orderBy('id', 'desc')->get();
+        $data['replies'] = Reply::all();
         return view('home.userpage',$data);
     }
     public function redirect()
@@ -42,7 +46,9 @@ class HomesController extends Controller
         return view('admin.partial.home',$data,compact('totalRevenue'));
        }
        else{
-        $data['products']=Product::orderBy('id','desc')->paginate(3);
+        $data['products']=Product::orderBy('id','desc')->paginate(6);
+        $data['comments'] = Comments::orderBy('id','desc')->get();
+        $data['replies'] = Reply::all();
         return view('home.userpage', $data);
        }
     }
@@ -56,6 +62,15 @@ class HomesController extends Controller
     {
         $product = Product::find($id);
         return view('home.product_details',compact('product'));
+    }
+
+    //Product Search For Frontend
+    public function searchProduct(Request $request){
+        $search_text = $request->search;
+        $data['products'] = Product::where('title','LIKE',"%$search_text%")->orWhere('category','LIKE',"$search_text")->orWhere('price','LIKE',"%$search_text%")->paginate(6);
+        $data['comments'] = Comments::orderBy('id', 'desc')->get();
+        $data['replies'] = Reply::all();
+        return view('home.userpage',$data);
     }
 
     /**
@@ -206,5 +221,33 @@ class HomesController extends Controller
         $cart = Cart::find($id);
         $cart->delete();
         return redirect()->back();
+    }
+
+    //comments function
+    public function addComment(Request $request){
+        if(Auth::id()){
+           $comment = new Comments(); 
+           $comment->name = Auth::user()->name;
+           $comment->user_id = Auth::user()->id;
+           $comment->comment = $request->comment;
+           $comment->save();
+           return redirect()->back();
+        }else{
+            return redirect('login');
+        }
+    }
+
+    //comment reply function
+    public function addReply(Request $request){
+       if(Auth::id()){
+        $reply = new Reply();
+        $reply->name=Auth::user()->name;
+        $reply->comment_id = $request->commentId;
+        $reply->reply = $request->reply;
+        $reply->save();
+        return redirect()->back();
+       }else{
+        return redirect('login');
+       }
     }
 }

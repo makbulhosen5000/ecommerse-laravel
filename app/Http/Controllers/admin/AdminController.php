@@ -11,6 +11,7 @@ use Notification;
 use Illuminate\Http\Request;
 use Session;
 use PDF;
+use Auth;
 
 class AdminController extends Controller
 {
@@ -135,6 +136,24 @@ class AdminController extends Controller
         //search by name,phone and product_title
         $orders = Order::where('name','LIKE',"%$searchText%")->orWhere('phone','LIKE', "%$searchText%")->orWhere('product_title','LIKE',"%$searchText%")->get();
         return view('admin.order.order',compact('orders'));
+    }
+    
+    //user orders related function
+    public function showOrder(){
+        if(Auth::id()){
+            $user = Auth::user();
+            $userId = $user->id;
+            $order = Order::where('user_id','=',$userId)->get();
+            return view("home.order",compact('order'));
+        }else{
+            return redirect('login');
+        }
+    }
+    public function cancelOrder($id){
+        $order = Order::find($id);
+        $order->delivery_status='You cancel the order';
+        $order->save();
+        return redirect()->back();
     }
 }
 
