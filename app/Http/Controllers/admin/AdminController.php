@@ -17,76 +17,120 @@ class AdminController extends Controller
 {
     // category related function is here
     public function viewCategory(){
-        $data = Category::all();
-        return view('admin.category.category',compact('data'));
+        if(Auth::id()){
+            $data = Category::all();
+            return view('admin.category.category', compact('data'));
+        }else{
+            return redirect('login');
+        }
     }
     public function addCategory(Request $request){
-        $data = new Category();
-        $data->category_name = $request->category_name;
-        $data->save();
-        return redirect()->back()->with('success',"Category Created Successfully");
+        if(Auth::id()){
+            $data = new Category();
+            $data->category_name = $request->category_name;
+            $data->save();
+            return redirect()->back()->with('success', "Category Created Successfully");
+        } else {
+            return redirect('login');
+        }
+      
     }
     public function deleteCategory($id){
-        $data = Category::find($id);
-        $data->delete();
-        return redirect()->back()->with('success','Category Deleted Successfully');
+        if(Auth::id()){
+            $data = Category::find($id);
+            $data->delete();
+            return redirect()->back()->with('success', 'Category Deleted Successfully');
+        } else {
+            return redirect('login');
+        }
     }
 
     // product related function is here
     public function viewProduct(){
-        $category = Category::all();
-        return view('admin.product.product',compact('category'));
+        if(Auth::id()){
+            $category = Category::all();
+            return view('admin.product.product', compact('category'));
+        }else{
+            return redirect('login');
+        }
+      
     }
     public function addProduct(Request $request)
     {
-        $product = new Product;
-        $product->title = $request->title;
-        $product->description =$request->description;
-        $product->category = $request->category;
-        $image=$request->image;
-        $imagename=time().'.'.$image->getClientOriginalExtension();
-        $request->image->move('images/product', $imagename);
-        $product->image= $imagename;
-        $product->quantity = $request->quantity;
-        $product->price = $request->price;
-        $product->discount_price = $request->discount_price;
-        $product->save();
-        return redirect()->back()->with('success','Product Added Successfully');
+        if(Auth::id()){
+            $product = new Product;
+            $product->title = $request->title;
+            $product->description = $request->description;
+            $product->category = $request->category;
+            $image = $request->image;
+            $imagename = time() . '.' . $image->getClientOriginalExtension();
+            $request->image->move('images/product', $imagename);
+            $product->image = $imagename;
+            $product->quantity = $request->quantity;
+            $product->price = $request->price;
+            $product->discount_price = $request->discount_price;
+            $product->save();
+            return redirect()->back()->with('success', 'Product Added Successfully');
+        }else{
+            return redirect('login');
+        }
+       
     }
 
     public function showProduct(){
-        $product = Product::all();
-        return view('admin.product.show_product',compact('product'));
+        if(Auth::id()){
+            $product = Product::all();
+            return view('admin.product.show_product', compact('product'));
+        } else {
+            return redirect('login');
+        }
+     
     }
 
     public function updateProduct($id){
-        $product = Product::find($id);
-        $category = Category::all();
-        return view('admin.product.update_product',compact('product','category'));
+        if(Auth::id()){
+            $product = Product::find($id);
+            $category = Category::all();
+            return view('admin.product.update_product', compact('product', 'category'));
+        }else{
+            return redirect('login');
+        }
+           
+        
+        
     }
     public function updateProductStore(Request $request,$id){
-        $product = Product::find($id);
-        $product->title = $request->title;
-        $product->description = $request->description;
-        $product->category = $request->category;
-        $image = $request->image;
-        $imagename = time() . '.' . $image->getClientOriginalExtension();
-        $request->image->move('images/product', $imagename);
-        $product->image = $imagename;
-        $product->quantity = $request->quantity;
-        $product->price = $request->price;
-        $product->discount_price = $request->discount_price;
-        $product->save();
-        return redirect()->back()->with('success', 'Product Updated Successfully');
+        if(Auth::id()){
+            $product = Product::find($id);
+            $product->title = $request->title;
+            $product->description = $request->description;
+            $product->category = $request->category;
+            $image = $request->image;
+            $imagename = time() . '.' . $image->getClientOriginalExtension();
+            $request->image->move('images/product', $imagename);
+            $product->image = $imagename;
+            $product->quantity = $request->quantity;
+            $product->price = $request->price;
+            $product->discount_price = $request->discount_price;
+            $product->save();
+            return redirect()->back()->with('success', 'Product Updated Successfully');
+        }else{
+            return redirect('login');
+        }
+       
     }
 
     public function deleteProduct($id){
-        $deleteData = Product::find($id);
-        if (file_exists('images/product/'.$deleteData->image) and !empty($deleteData->image)) {
-            unlink('images/product/'.$deleteData->image);
+        if(Auth::id()){
+            $deleteData = Product::find($id);
+            if (file_exists('images/product/' . $deleteData->image) and !empty($deleteData->image)) {
+                unlink('images/product/' . $deleteData->image);
+            }
+            $deleteData->delete();
+            return redirect()->back()->with('success', 'Product Deleted Successfully');
+        }else{
+            return redirect()->back();
         }
-        $deleteData->delete();
-        return redirect()->back()->with('success', 'Product Deleted Successfully');
     }
 
     // order related function
@@ -128,15 +172,20 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'Notification Send To User Successfully');
     } 
     
-    //search function
+    //search function for backend
     public function searchData(Request $request){
-        $searchText = $request->search;
-        //search by name
-        //$orders = Order::where('name','LIKE',"%$searchText%")->get();
-        //search by name,phone and product_title
-        $orders = Order::where('name','LIKE',"%$searchText%")->orWhere('phone','LIKE', "%$searchText%")->orWhere('product_title','LIKE',"%$searchText%")->get();
-        return view('admin.order.order',compact('orders'));
+        if(Auth::id()){
+            $searchText = $request->search;
+            //search by name
+            //$orders = Order::where('name','LIKE',"%$searchText%")->get();
+            //search by name,phone and product_title
+            $orders = Order::where('name', 'LIKE', "%$searchText%")->orWhere('phone', 'LIKE', "%$searchText%")->orWhere('product_title', 'LIKE', "%$searchText%")->get();
+            return view('admin.order.order', compact('orders'));
+        }else{
+            return redirect()->back();
+        }
     }
+    
     
     //user orders related function
     public function showOrder(){
@@ -150,10 +199,15 @@ class AdminController extends Controller
         }
     }
     public function cancelOrder($id){
-        $order = Order::find($id);
-        $order->delivery_status='You cancel the order';
-        $order->save();
-        return redirect()->back();
+        if(Auth::id()){
+            $order = Order::find($id);
+            $order->delivery_status = 'You cancel the order';
+            $order->save();
+            return redirect()->back();
+        }else{
+            return redirect('login');
+        }
+
     }
 }
 

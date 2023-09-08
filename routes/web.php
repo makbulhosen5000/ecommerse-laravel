@@ -50,10 +50,16 @@ Route::post('/add_comment', [HomesController::class, 'addComment']);
 Route::post('/add_reply', [HomesController::class, 'addReply']);
 //search product
 Route::get('/search_product',[HomesController::class,'searchProduct']);
+//single pages route
+Route::get('/product_search', [HomesController::class, 'productSearch']);
+Route::get('/all_product',[HomesController::class, 'allProduct']);
+
+
 //.... category routes  ....//
 Route::get('/view_category', [AdminController::class, 'viewCategory']);
 Route::post('/add_category', [AdminController::class, 'addCategory']);
 Route::get('/delete_category/{id}', [AdminController::class, 'deleteCategory']);
+
 
 //.... product routes for backend ....//
 Route::get('/view_product', [AdminController::class, 'viewProduct']);

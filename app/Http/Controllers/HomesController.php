@@ -11,6 +11,7 @@ use App\Models\Reply;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use RealRashid\SweetAlert\Facades\Alert;
 use Session;
 use Stripe;
 
@@ -26,6 +27,7 @@ class HomesController extends Controller
         $data['products']=Product::orderBy('id','desc')->paginate(6);
         $data['comments'] = Comments::orderBy('id', 'desc')->get();
         $data['replies'] = Reply::all();
+        $data['carts'] = Cart::all();
         return view('home.userpage',$data);
     }
     public function redirect()
@@ -83,27 +85,43 @@ class HomesController extends Controller
     {
         if(Auth::id()){
            $user = Auth::user();
+           $userId = $user->id;
            $product = Product::find($id);
-           $cart = new Cart;
-           $cart->name = $user->name;
-           $cart->email = $user->email;
-           $cart->phone = $user->phone;
-           $cart->address = $user->address;
-           $cart->user_id = $user->id;
-           $cart->product_title = $product->title;
-           if($product->discount_price != null)
-           {
-            $cart->price=$product->discount_price * $request->quantity;
+           $productExistId = Cart::where('product_id','=',$id)->where('user_id','=',$userId)->get('id')->first();
+           if($productExistId){
+                $cart = Cart::find($productExistId)->first();
+                $quantity = $cart->quantity;
+                $cart->quantity = $quantity + $request->quantity;
+                if ($product->discount_price != null) {
+                    $cart->price = $product->discount_price * $cart->quantity;
+                } else {
+                    $cart->price = $product->price * $request->quantity;
+                }
+                $cart->save();
+                Alert::success("Product Added Successfully","We Have Added Product to the cart");
+                return redirect()->back();
+            }else{
+                $cart = new Cart;
+                $cart->name = $user->name;
+                $cart->email = $user->email;
+                $cart->phone = $user->phone;
+                $cart->address = $user->address;
+                $cart->user_id = $user->id;
+                $cart->product_title = $product->title;
+
+                if ($product->discount_price != null) {
+                    $cart->price = $product->discount_price * $request->quantity;
+                } else {
+                    $cart->price = $product->price * $request->quantity;
+                }
+                $cart->image = $product->image;
+                $cart->product_id = $product->id;
+                $cart->quantity = $request->quantity;
+                $cart->save();
+                Alert::success("Product Added Successfully","We Have Added Product to the cart");
+                return redirect()->back();
            }
-           else
-           {
-            $cart->price = $product->price * $request->quantity;
-           }
-           $cart->image = $product->image;
-           $cart->product_id = $product->id;
-           $cart->quantity = $request->quantity;
-           $cart->save();
-           return redirect()->back();
+
         }else{
             return redirect('login');
         }
@@ -249,5 +267,22 @@ class HomesController extends Controller
        }else{
         return redirect('login');
        }
+    }
+
+    //single pages function start from here.....
+    public function allProduct(){
+        $data['products'] = Product::orderBy('id', 'desc')->paginate(6);
+        $data['comments'] = Comments::orderBy('id', 'desc')->get();
+        $data['replies'] = Reply::all();
+        return view('home.pages.all_product',$data);
+    }
+    //Product Search For Frontend
+    public function productSearch(Request $request)
+    {
+        $search_text = $request->search;
+        $data['products'] = Product::where('title', 'LIKE', "%$search_text%")->orWhere('category', 'LIKE', "$search_text")->orWhere('price', 'LIKE', "%$search_text%")->paginate(6);
+        $data['comments'] = Comments::orderBy('id', 'desc')->get();
+        $data['replies'] = Reply::all();
+        return view('home.pages.all_product', $data);
     }
 }

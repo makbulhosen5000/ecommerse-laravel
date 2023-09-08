@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
+    
     <title>Stripe Payment Gateway Integration</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+     @include('home.css_link');
 </head>
 <body>
     
 <div class="container">
-    
-    <h1>Pay Using Card Total Amount is: ${{ $totalPrice }}</h1>
+    <div class="text-center">
+        <a href="{{ ('/') }}" class="btn btn-success">Home</a>
+    <h1 class="">Pay Using Card Total Amount is: ${{ $totalPrice }}</h1>
+    </div>
     
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
